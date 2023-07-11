@@ -46,7 +46,8 @@ class UserRegistration:
 
                 "money": 0,
 
-                "potential": get_potential(),
+                "potential": "S",
+                #"potential": get_potential(),
 
                 'lvl': 1,
                 'experience': {
@@ -85,7 +86,12 @@ class UserRegistration:
                 ],
                 'achievements': [
 
-                ]
+                ],
+
+                'location': 'Город Лотоса',
+
+                'isAdmin': False,
+
             }
 
             self.collection.insert_one(player_data)
@@ -95,8 +101,6 @@ class UserRegistration:
             keyboard.add(profile_button)
             await message.answer("""
     Вы создали персонажа. Самое время начать свой путь в Immortal Life.
-    Важно помнить, ваш персонаж может умереть и если такое случиться, вам придётся начинать всё с начала.
-    В этом и есть смысл игры, пройти долгий и трудный путь, после которого стать бессмертным небожителем, возвысившимся над простыми смертными.
     Желаю вам успехов!
                 """, reply_markup=keyboard)
 

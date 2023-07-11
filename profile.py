@@ -16,6 +16,17 @@ dp = Dispatcher(bot)
 client = MongoClient(MONGODB_URI)
 db = client['Life']
 players_collection = db['players']
+techniques = db['techniques']
+
+def ma_update(user_id):
+    character_profile = players_collection.find_one({"user_id": user_id})
+    t_data = techniques.find_one({"owner": user_id})
+
+    if t_data:
+        players_collection.update_one({"user_id": user_id}, {"$set": {'material_art': t_data['name']}})
+    else:
+        return True
+
 
 def level_up(user_id):
     character_profile = players_collection.find_one({"user_id": user_id})
@@ -27,7 +38,7 @@ def level_up(user_id):
 
         while current >= total:
             new_level = 1
-            point = 1
+            current -= total
 
             if potential == 'S':
                 point = 12
@@ -68,6 +79,7 @@ class ProfileCommand:
     async def execute(self, message):
         user_id = message.from_user.id
         level_up(user_id)
+        ma_update(user_id)
         profile_data = self.get_profile_data(user_id)
 
 
@@ -79,6 +91,8 @@ class ProfileCommand:
             current = profile_data.get("experience").get("current")
             total = profile_data.get("experience").get("total")
             stats = profile_data.get("stats")
+            loc = profile_data.get("location")
+            material_art = profile_data.get('material_art')
 
 
             await message.answer(f"""
@@ -87,7 +101,11 @@ class ProfileCommand:
 Имя: {username}
 Потенциал: {potential}
 
-Уровель: {lvl}
+Локация: {loc}
+
+Боевое искусство: {material_art}
+
+Уровень: {lvl}
 Опыт: {current} из {total}
 
 Деньги: {money} духовных камней(дк)
@@ -108,4 +126,6 @@ class ProfileCommand:
 
     def get_profile_data(self, user_id):
         return self.collection.find_one({"user_id": user_id})
+
+
 
