@@ -40,8 +40,21 @@ def battle(attacker_id, defender_id):
     def_damage = defender_stats['strength'] + defender_stats['agility'] + defender_stats['intelligence']
 
     # Награда
-    win_attack = round(defender_profile['money'] / 2)
-    win_def = round(attacker_profile['money'] / 2)
+    if defender_profile['money'] != 0:
+        win_attack = round(defender_profile['money'] / 2)
+
+        if win_attack < 1:
+            win_attack = 0
+    else:
+        win_attack = 0
+
+    if attacker_profile['money'] != 0:
+        win_def = round(attacker_profile['money'] / 2)
+
+        if win_def < 1:
+            win_def = 0
+    else:
+        win_def = 0
 
     # Боевое искусство
 
